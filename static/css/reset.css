@@ -9,3 +9,8 @@ ul {
 img {
   vertical-align: top;
 }
+button {
+  outline: none;
+  background: transparent;
+  border: 0;
+}

@@ -11,19 +11,12 @@
       <div class="tab-bar"></div>
     </ul>
     <!-- 前三甲 -->
-<<<<<<< HEAD
-    <div class="top-three">
-      <div class="top-item">1</div>
-      <div class="top-item">2</div>
-      <div class="top-item">3</div>
-=======
     <div class="list-box" :class="{listRight: tabValue === 1}">
-      <int-view :listOther="listOther" :listTop="listTop" :Count="count" @getData="getData"></int-view>
+      <int-view :listOther="listOther" :listTop="listTop" :Count="count" @getData="getData" :myAink="myAink"></int-view>
       <int-view :listOther="listOther2" :listTop="listTop2" :Count="count2" @getData="getData"></int-view>
     </div>
     <div class="select-container-box">
       <select-box :depData="options" v-if="isDep" @getInt="getInt"></select-box>
->>>>>>> 102d0a5b9683470e9cca055e130c2d77a32fb01f
     </div>
      
   </div>
@@ -72,7 +65,8 @@ export default {
       twoClick: false,
       // 上啦加载状态
       tab1: false,
-      tab2: false
+      tab2: false,
+      myAink: {}
     }
   },
   mounted () {
@@ -96,7 +90,9 @@ export default {
             this.isDep = !this.isDep
           }
         } else {
-          this.isDep = true
+          if (this.options.length) {
+            this.isDep = true
+          }
           return
         }
       } else {
@@ -113,18 +109,31 @@ export default {
         pageindex: this.pageindex,
         pagesize: this.pagesize
       })
-      let data = result.Data
+      if (result.Code === 401) {
+        return
+      }
+      let data = result.Data.CoinGiftRankingList
       if (this.departmentID) {
         this.listTop2 = data.splice(0,3)
         this.listOther2 = data
         this.count2 = result.Count
+        console.log(this.listOther2)
       } else {
         this.listTop = data.splice(0,3)
         this.listOther = data
         this.count = result.Count
+        this.myAink = result.Data.CurrentRanking
+        console.log(result)
       }
       if (this.departmentID) {
         this.twoClick = true
+      }
+      if (result.Count <= 10) {
+        if (this.tabValue) {
+          this.tab2 = true
+        } else {
+          this.tab = true
+        }
       }
     },
     // 部门列表
@@ -138,22 +147,17 @@ export default {
     },
     // 选择部门获取部门ID
     getInt (val) {
+      this.pagesize = 10
+      this.tabs2 = false
+      this.twoClick = !this.twoClick
       this.defaultID = val
       this.departmentID = val
       this._GetCoinGiftRanking()
       this.isDep = false
-      console.log(val)
-      this.twoClick = !this.twoClick
-      this.pagesize = 10
-      if (this.count2 > 0 && this.count2 <= 10) {
-        this.tab2 = true
-      } else {
-        this.tabs = false
-      }
     },
     // 上啦加载
     async getData () {
-      this.pagesize += 100
+      this.pagesize += 10
       if (this.tabValue) {
         if (this.tab2) {
           return
@@ -171,16 +175,26 @@ export default {
         pageindex: this.pageindex,
         pagesize: this.pagesize
       })
-      let data = result.Data.splice(3)
+      let data = result.Data.CoinGiftRankingList.splice(3)
+      
       if (this.departmentID) {
-        this.listOther1 = data
+        this.listOther2 = data
+        console.log(data)
       } else {
         this.listOther = data
         console.log(result.Count, data.length)
       }
-      if (data.length + 3 === result.Count) {
-          this.tabValue ? this.tab2 = true : this.tab1 = true
+      if (result.Count <= 10) {
+        if (this.tabValue) {
+          this.tab2 = true
+        } else {
+          this.tab1 = true
         }
+      }
+      if (data.length + 3 === result.Count) {
+        this.tabValue ? this.tab2 = true : this.tab1 = true
+      }
+      console.log(this.tab2)
     }
   },
   components: {
@@ -242,33 +256,6 @@ export default {
       // background-color: #2F54ED;
     }
   }
-<<<<<<< HEAD
-  .top-three {
-    padding: 0 .3rem;
-    display: flex;
-    justify-content: space-around;
-    padding-top: .3rem;
-    .top-item {
-      width: 2.1rem;
-      height: 3rem;
-      box-shadow:0px 4px 50px 0px rgba(0,0,0,0.06);
-      margin-top: .5rem;
-      border-radius: .2rem;
-      position: relative;
-      &:after {
-        content: '';
-        position: absolute;
-        height: .3rem;
-        width: 100%;
-        background-color: #000;
-        z-index: -1;
-      }
-      &:nth-of-type(2) {
-        margin-top: 0;
-        height: 3.5rem;
-      }
-    }
-=======
   .list-box {
     display: flex;
     transition: .3s;
@@ -276,7 +263,6 @@ export default {
   }
   .listRight {
     transform: translateX(-100vw);
->>>>>>> 102d0a5b9683470e9cca055e130c2d77a32fb01f
   }
 }
 </style>

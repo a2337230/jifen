@@ -1,65 +1,79 @@
 <template>
   <div class="int-view">
     <!-- 前三甲 -->
-    <ul class="top-three" v-if="listTop.length">
-      <li>
-        <!-- 图标 -->
-        <img src="./../../common/images/two.png" alt="2" class="icon">
-        <div class="top-item-container">
-          <div class="avatar">
-            <img :src="'https://img.xlxt.net/' + listTop[1].HeadImg" alt="">
+    <div class="int-container" v-if="Count">
+      <ul class="top-three" v-if="listTop.length">
+        <li v-if="listTop.length >= 2">
+          <!-- 图标 -->
+          <img src="./../../common/images/two.png" alt="2" class="icon">
+          <div class="top-item-container">
+            <div class="avatar">
+              <img :src="'https://img.xlxt.net/' + listTop[1].HeadImg" alt="">
+            </div>
+            <p class="int-name">{{ listTop[1].Name }}</p>
+            <div class="integral">
+              <span>{{ listTop[1].CoinCount }}</span>
+              <p><img src="./../../common/images/jifen.png" alt="">积分</p>
+            </div>
           </div>
-          <p class="int-name">{{ listTop[1].Name }}</p>
-          <div class="integral">
-            <span>{{ listTop[1].CoinCount }}</span>
-            <p><img src="./../../common/images/jifen.png" alt="">积分</p>
+        </li>
+        <li>
+          <!-- 图标 -->
+          <img src="./../../common/images/one.png" alt="2" class="icon">
+          <div class="top-item-container">
+            <div class="avatar">
+              <img :src="'https://img.xlxt.net/' + listTop[0].HeadImg" alt="">
+            </div>
+            <p class="int-name">{{ listTop[0].Name }}</p>
+            <div class="integral">
+              <span>{{ listTop[0].CoinCount }}</span>
+              <p><img src="./../../common/images/jifen.png" alt="">积分</p>
+            </div>
           </div>
-        </div>
-      </li>
-      <li>
-        <!-- 图标 -->
-        <img src="./../../common/images/one.png" alt="2" class="icon">
-        <div class="top-item-container">
-          <div class="avatar">
-            <img :src="'https://img.xlxt.net/' + listTop[0].HeadImg" alt="">
+        </li>
+        <li v-if="listTop.length === 3">
+          <!-- 图标 -->
+          <img src="./../../common/images/three.png" alt="2" class="icon">
+          <div class="top-item-container">
+            <div class="avatar">
+              <img :src="'https://img.xlxt.net/' + listTop[2].HeadImg" alt="">
+            </div>
+            <p class="int-name">{{ listTop[2].Name }}</p>
+            <div class="integral">
+              <span>{{ listTop[2].CoinCount }}</span>
+              <p><img src="./../../common/images/jifen.png" alt="">积分</p>
+            </div>
           </div>
-          <p class="int-name">{{ listTop[0].Name }}</p>
-          <div class="integral">
-            <span>{{ listTop[0].CoinCount }}</span>
-            <p><img src="./../../common/images/jifen.png" alt="">积分</p>
-          </div>
-        </div>
-      </li>
-      <li>
-        <!-- 图标 -->
-        <img src="./../../common/images/three.png" alt="2" class="icon">
-        <div class="top-item-container">
-          <div class="avatar">
-            <img :src="'https://img.xlxt.net/' + listTop[2].HeadImg" alt="">
-          </div>
-          <p class="int-name">{{ listTop[2].Name }}</p>
-          <div class="integral">
-            <span>{{ listTop[2].CoinCount }}</span>
-            <p><img src="./../../common/images/jifen.png" alt="">积分</p>
-          </div>
-        </div>
-      </li>
-    </ul>
-    <!-- 其余排名 -->
-    <scroll v-if="listOther.length" class="list-content" @scrollToEnd="getData" :data="listOther">
-      <ul class="int-list">
-        <li v-for="(item, index) in listOther" :key="item.AppUserID">
-          <span class="int-count">{{index + 4}}</span>
-          <div class="avatar">
-            <img :src="'https://img.xlxt.net/' + item.HeadImg" alt="">
-          </div>
-          <p class="int-name">{{item.Name}}</p>
-          <span class="int-num">{{item.CoinCount}}积分</span>
         </li>
       </ul>
-    </scroll>
+      <!-- 其余排名 -->
+      <scroll v-if="listOther.length" class="list-content" @scrollToEnd="getData" :data="listOther">
+        <ul class="int-list" :class="{listHeight: myAink.appUser}">
+          <li v-for="(item, index) in listOther" :key="item.AppUserID">
+            <span class="int-count">{{index + 4}}</span>
+            <div class="avatar">
+              <img :src="'https://img.xlxt.net/' + item.HeadImg" alt="">
+            </div>
+            <p class="int-name">{{item.Name}}</p>
+            <span class="int-num">{{item.CoinCount}}积分</span>
+          </li>
+        </ul>
+      </scroll>
+    </div>
+    
     <!-- 暂无数据 -->
     <p class="no-data" v-if="!Count">暂无数据</p>
+     <!-- 个人排行 -->
+     <ul class="my-rank" v-if="myAink.appUser">
+       <li>
+          <span class="int-count">{{myAink.rankingNum}}</span>
+          <div class="avatar">
+            <img :src="'https://img.xlxt.net/' + myAink.appUser.HeadImg" alt="">
+          </div>
+          <p class="int-name">{{myAink.appUser.Name}}</p>
+          <span class="int-num">{{myAink.appUser.CoinCount}}积分</span>
+        </li>
+     </ul>
   </div>
 </template>
 <script>
@@ -79,6 +93,10 @@ export default {
     Count: {
       type: Number,
       default: 0
+    },
+    myAink: {
+      type: Object,
+      default: () => { return {} }
     }
   },
   methods: {
@@ -100,7 +118,7 @@ export default {
   padding-top: .2rem;
   position: relative;
   .top-three {
-    padding: .65rem .3rem 0;
+    padding: .65rem .3rem;
     display: flex;
     justify-content: space-between;
     li {
@@ -197,8 +215,9 @@ export default {
       
     }
   }
-  .int-list {
-    padding: .65rem .3rem 0;
+  .int-list, .my-rank {
+    padding: .68rem .3rem 0;
+    // margin-top: .68rem;
     li {
       // background-color: #000;
       height: .8rem;
@@ -246,10 +265,34 @@ export default {
     color: #999;
   }
   .list-content {
-    height: calc(~"100vh - 1.86rem - 4.36rem");
+    height: calc(~"100vh - 1.86rem - 4.36rem - .68rem");
     overflow: hidden;
     margin-bottom: .88rem;
     box-sizing: border-box;
+  }
+  .listHeight {
+    padding-bottom: 1.24rem;
+  }
+  .my-rank {
+    position: fixed;
+    left: 0;
+    bottom: .8rem;
+    width: 100vw;
+    height: 1.24rem;
+    background-color: #f6f6f6;
+    z-index: 999;
+    padding: .2rem .3rem 0;
+    box-sizing: border-box;
+    // display: flex;
+    // align-items: center;
+    // li {
+    //   margin-bottom: 0;
+    //   position: relative;
+    //   .int-num {
+    //     position: absolute;
+    //     right: 0;
+    //   }
+    // }
   }
 }
 </style>

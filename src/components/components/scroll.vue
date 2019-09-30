@@ -2,6 +2,7 @@
   <div ref="wrapper" class="scroll-wrap">
     <div>
       <slot></slot>
+
       <!-- <div v-if="pullup" class="pullup">
         <div class="clear" v-if="!isDone">
           <div class="fl"><img width="30" src="./../../common/images/loading.gif"></div>
@@ -12,6 +13,10 @@
         </div>
       </div>
       <div v-else class="nomore">{{noMore==true?'':'暂无更多~'}}</div> -->
+      <div class="pull-load" v-show="isLoading">
+        <img src="./../../common/images/loading.gif" alt="">
+        正在加载...
+      </div>
     </div>
   </div>
 </template>
@@ -59,14 +64,7 @@ import { debug } from 'util';
       scrollX:{
         type:Boolean,
         default:false
-      },
-      noMore:{
-        type:Boolean,
-        default:false
-      },
-      // isLoading:{
-      //   type:Boolean
-      // }
+      }
     },
     mounted() {
       setTimeout(() => {
@@ -182,42 +180,19 @@ import { debug } from 'util';
 </script>
 
 <style scoped lang="less">
-  .pullup {
-    width:100%;
-    height:50px;
-    position: relative;
-    font-size: 13px;
-    margin-top: -15px;
-    div.clear {
-      padding:10px 0px;
-      font-size: 13px;
-      position: absolute;
-      width: 31%;
-      left:50%;
-      top:5px;
-      transform:translate(-50%,0);
-      .fl {
-        float: left;
-        line-height: 26px;
-      }
-    }
-  }
-
-.list-donetip {
-  text-align:center;
-  line-height:50px;
-  font-size: 13px;
+.scroll-wrap {
+  padding-bottom: .5rem
 }
-  
-.nomore {
-  text-align:center;
-  line-height:15px;
-  font-size: 13px;
-  margin-top: 6px;
-  margin-bottom: 12px;
-  z-index: 999;
-  position: relative;
-  top: -0.3rem;
+.pull-load {
+  height: .5rem;
+  display: flex;
+  justify-content: center;
+  color: #999;
+  img {
+    width: .45rem;
+    height: .45rem;
+    margin-right: .2rem;
+  }
 }
 </style>
 

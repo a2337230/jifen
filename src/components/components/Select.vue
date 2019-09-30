@@ -1,24 +1,33 @@
 <template>
   <div class="select-container" v-if="depData.length">
+    <!-- <div class="share"></div> -->
     <div class="select">
-      <div class="select-item" @click="clickOne">
-        <p :class="{itemCurrent: checkItem.includes(depData[0].CommonTypeID)}">{{depData[0].Name}}</p>
-        <div class="share"></div>
+      <div class="select-item">
+        <p :class="{itemCurrent: checkItem.includes(depData[0].CommonTypeID)}">
+          <span>{{depData[0].Name}}</span>
+        </p>
       </div>
       <div class="select-child" v-for="(item, index) in dataChild" :key="item.CommonTypeID">
-        <scroll class="select-froup">
-          <p :class="{itemCurrent: checkItem.includes(citem.CommonTypeID)}" v-for="citem in item.Nodes" :key="citem.CommonTypeID" @click="clickChild(citem, index, item.Nodes)">{{citem.Name}}</p>
-        </scroll>
+        <div class="select-froup">
+          <p :class="{itemCurrent: checkItem.includes(citem.CommonTypeID)}" v-for="citem in item.Nodes" :key="citem.CommonTypeID" @click="clickChild(citem, index, item.Nodes)">
+            <span>
+              {{citem.Name}}
+            </span>
+            <!-- <marquee v-else>
+              {{citem.Name}}
+            </marquee> -->
+          </p>
+        </div>
       </div>
       
     </div>
+    <div class="share"></div>
     <div class="select-btn">
       <div class="btn-froup">
         <button @click="reset">重置</button>
         <button @click="submitData">确定</button>
       </div>
     </div>
-    
   </div>
  
 </template>
@@ -35,10 +44,17 @@ export default {
   },
   data () {
     return {
-      dataChild: '',
+      dataChild: [],
       checkItem: [],
       clickTime: String(new Date())
     }
+  },
+  created () {
+    let data = {
+      Nodes: this.depData[0].Nodes
+    }
+    this.dataChild.push(data)
+    this.checkItem.push(this.depData[0].CommonTypeID)
   },
   methods: {
     // 选中一级菜单
@@ -77,13 +93,16 @@ export default {
         console.log(this.checkItem, this.dataChild)
         if (this.checkItem.length >=3) {
           if (val.Nodes.length ===0) {
+            if (this.checkItem.length > 3) {
+              left = this.checkItem.length * 33.3 - 100
+              box.style.transform = `translateX(-${left}vw)`
+            }
             return
           }
           left = (this.checkItem.length + 1) * 33.3 - 100
           box.style.transform = `translateX(-${left}vw)`
           console.log((this.checkItem.length + 1) * 33.3 - 100)
         } else {
-          // alert(1)
           box.style.transform = `translateX(0vw)`
         }
       } else {
@@ -128,18 +147,22 @@ export default {
   position: relative;
   width: 100vw;
   overflow-x: scroll;
+  background-color: #fff;
+  /* background-position: -66.6vw 0; */
 }
 .select {
   display: flex;
   transform: translateX(0);
   transition: .3s;
   min-width: 100vw;
-  background-color: #fff;
+  position: relative;
+  z-index: 2;
+  /* background-color: #fff; */
 }
 .select-item, .select-child {
   width: 33.3%;
-  height: 300px;
-  background-color: #fff;
+  height: 6rem;
+  /* background-color: #fff; */
   position: relative;
   z-index: 2;
   /* overflow: hidden; */
@@ -151,18 +174,28 @@ export default {
 .select-child::last-child {
   border: 0;
 }
-.select-item p, .select-child p {
+.select-item, .select-child {
   width: 33.3vw;
-  font-size: 14px;
-  line-height: 40px;
+  min-width: 33.3vw;
+  padding: 0 .4rem;
+  box-sizing: border-box;
+}
+.select-item p, .select-child p {
+  width: 100%;
+  font-size: .28rem;
+  line-height: .8rem;
   color: #848484;
   text-align: center;
   position: relative;
   z-index: 999;
+  overflow-x: scroll;
+}
+.select-item p span, .select-child p span {
+  white-space: nowrap;
 }
 .select-child p {
   /* width: 100%; */
-  padding-left: 20px;
+  /* padding-left: 20px; */
   text-align: left;
   box-sizing: border-box;
 }
@@ -170,23 +203,22 @@ export default {
   color: #2F54EB !important;
 }
 .select-froup {
-  height: 280px;
-  overflow: hidden;
-  /* overflow-y: scroll;
-  overflow-x: hidden; */
+  height: 5.6rem;
+  /* overflow: hidden; */
+  overflow-y: scroll;
 }
 .select-btn {
   position: relative;
-  height: 50px;
+  height: 1rem;
   background-color: #f7f7f7;
 }
 .select-btn .btn-froup {
   position: fixed;
   left: 33.3vw;
-  top: 392px;
+  top: 7.84rem;
   width: calc(66.6vw);
   display: flex;
-  height: 50px;
+  height: 1rem;
 }
 .select-btn .btn-froup button {
   width: 50%;
@@ -198,12 +230,20 @@ export default {
   background-color: #2F54EB;
 }
 .share {
-  position: fixed;
+  position: absolute;
   left: 0;
   top: 0;
   width: 33.3vw;
-  height: 350px;
+  height: 6rem;
   background-color: #f7f7f7;
   /* z-index: 999; */
 }
+/* .share::after {
+  content: '';
+  position: absolute;
+  width: 66.66vw;
+  height: 300px;
+  left: 33.3vw;
+  top: 0;
+} */
 </style>

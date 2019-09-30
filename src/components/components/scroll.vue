@@ -17,6 +17,9 @@
         <img src="./../../common/images/loading.gif" alt="">
         正在加载...
       </div>
+      <p class="no-more" v-if="noMore">
+        <span>我也是有底线的</span>
+      </p>
     </div>
   </div>
 </template>
@@ -64,6 +67,10 @@ import { debug } from 'util';
       scrollX:{
         type:Boolean,
         default:false
+      },
+      Count: {
+        type: Number,
+        default: 0
       }
     },
     mounted() {
@@ -75,7 +82,8 @@ import { debug } from 'util';
       return {
         isLoading: false,
         isDone: false,
-        isload: 0
+        isload: 0,
+        noMore: false
       }
     },
 
@@ -90,6 +98,7 @@ import { debug } from 'util';
           probeType: this.probeType,
           click: this.click,
           scrollX:this.scrollX,
+          preventDefault:false,
         })
         if (this.listenScroll) {
           let me = this
@@ -97,7 +106,6 @@ import { debug } from 'util';
             me.$emit('scroll', pos)
           })
         }
-
         if (this.pullup) {
           this.scroll.on('scrollEnd', () => {
             if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {
@@ -116,7 +124,11 @@ import { debug } from 'util';
                 this.isDone = false;
               });
               this.isload++
-              this.$emit('scrollToEnd')
+              if (!this.noMore) {
+                this.isLoading = true
+                this.$emit('scrollToEnd')
+                
+              }
             }
           })
         } else {
@@ -161,9 +173,15 @@ import { debug } from 'util';
       }
     },
     watch: {
-      data() {
+      data(val) {
+        if (val.length + 3 === this.Count ) {
+          this.noMore = true
+          this.isLoading = false
+        }
+        this.isLoading = false
         setTimeout(() => {
           this.refresh()
+          
         }, this.refreshDelay)
       },
       noMore (val) {
@@ -181,9 +199,14 @@ import { debug } from 'util';
 
 <style scoped lang="less">
 .scroll-wrap {
-  padding-bottom: .5rem
+  padding-bottom: .5rem;
+  box-sizing: border-box;
+  position: relative;
 }
 .pull-load {
+  position: absolute;
+  width: 100vw;
+  bottom: 0;
   height: .5rem;
   display: flex;
   justify-content: center;
@@ -193,6 +216,39 @@ import { debug } from 'util';
     height: .45rem;
     margin-right: .2rem;
   }
+}
+.no-more {
+  position: absolute;
+  width: 100vw;
+  bottom: 0;
+  text-align: center;
+  color: #999;
+  // position: relative;
+  // display: flex;
+  span {
+    font-size: .3rem;
+    // line-height: .6rem;
+    position: relative;
+    &::before {
+      content: '';
+      position: absolute;
+      width: 1rem;
+      height: 1px;
+      background-color: #999;
+      left: -1.1rem;
+      top: .2rem;
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      width: 1rem;
+      height: 1px;
+      background-color: #999;
+      right: -1.1rem;
+      top: .2rem;
+    }
+  }
+  
 }
 </style>
 

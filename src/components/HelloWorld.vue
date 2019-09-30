@@ -11,10 +11,14 @@
       <div class="tab-bar"></div>
     </ul>
     <!-- 前三甲 -->
-    <div class="list-box" :class="{listRight: tabValue === 1}">
+    <v-touch class="list-box" :class="{listRight: tabValue === 1}" @swipeleft="swiperleft" @swiperight="swiperight">
       <int-view :listOther="listOther" :listTop="listTop" :Count="count" @getData="getData" :myAink="myAink"></int-view>
       <int-view :listOther="listOther2" :listTop="listTop2" :Count="count2" @getData="getData"></int-view>
-    </div>
+    </v-touch>
+    <!-- <div class="list-box" :class="{listRight: tabValue === 1}" @swipeleft="swiperleft" @swiperight="swiperight">
+      <int-view :listOther="listOther" :listTop="listTop" :Count="count" @getData="getData" :myAink="myAink"></int-view>
+      <int-view :listOther="listOther2" :listTop="listTop2" :Count="count2" @getData="getData"></int-view>
+    </div> -->
     <div class="select-container-box">
       <select-box :depData="options" v-if="isDep" @getInt="getInt"></select-box>
     </div>
@@ -73,6 +77,19 @@ export default {
     this._GetCoinGiftRanking()
   },
   methods: {
+    swiperleft () {
+      if (!this.tabValue) {
+        this.tabClick(1)
+      }
+    },
+    swiperight () {
+      if (this.tabValue) {
+        this.tabClick(0)
+      }
+    },
+    goPage (e) {
+      console.log(e)
+    },
     tabClick (index) {
       this.tabValue = index
       let tabItem = document.querySelector('.tab-bar')

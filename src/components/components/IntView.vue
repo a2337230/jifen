@@ -47,8 +47,8 @@
         </li>
       </ul>
       <!-- 其余排名 -->
-      <scroll v-if="listOther.length" class="list-content" @scrollToEnd="getData" :data="listOther">
-        <ul class="int-list" :class="{listHeight: myAink.appUser}">
+      <scroll :Count="Count" :class="{listHeight: myAink.appUser}" v-if="listOther.length" class="list-content" @scrollToEnd="getData" :data="listOther">
+        <ul class="int-list">
           <li v-for="(item, index) in listOther" :key="item.AppUserID">
             <span class="int-count">{{index + 4}}</span>
             <div class="avatar">
@@ -118,9 +118,10 @@ export default {
   padding-top: .2rem;
   position: relative;
   .top-three {
-    padding: .65rem .3rem;
-    display: flex;
-    justify-content: space-between;
+    padding: .65rem .3rem 0;
+    position: relative;
+    height: 3.5rem;
+    margin-bottom: .65rem;
     li {
       width: 2.1rem;
       height: 3rem;
@@ -128,12 +129,38 @@ export default {
       box-shadow:0px 4px 50px 0px rgba(0,0,0,0.06);
       border-radius: .2rem;
       background-color: #C7C7C7;
-      position: relative;
+      // position: relative;
       margin-top: .5rem;
+      position: absolute;
+      bottom: 0;
+      &:active {
+        animation: intClick .2s;
+      }
+      
+      @keyframes intClick {
+        0% {
+          height: 2.9rem;
+        }
+        100% {
+          height: 3rem;
+        }
+      }
+      @keyframes intClick2 {
+        0% {
+          height: 3.3rem;
+        }
+        100% {
+          height: 3.5rem;
+        }
+      }
       &:nth-of-type(2) {
         margin-top: 0;
         height: 3.5rem;
         background-color:#D5A963;
+        left: 2.7rem;
+        &:active {
+          animation: intClick2 .2s;
+        }
         .top-item-container {
           .avatar {
             width: 1rem;
@@ -148,6 +175,7 @@ export default {
         }
       }
       &:nth-of-type(3) {
+        left: 5.1rem;
         background-color:#E69064;
       }
       .icon {
@@ -216,7 +244,7 @@ export default {
     }
   }
   .int-list, .my-rank {
-    padding: .68rem .3rem 0;
+    padding: 0 .3rem .5rem;
     // margin-top: .68rem;
     li {
       // background-color: #000;
@@ -267,16 +295,16 @@ export default {
   .list-content {
     height: calc(~"100vh - 1.86rem - 4.36rem - .68rem");
     overflow: hidden;
-    margin-bottom: .88rem;
+    // margin-bottom: .2rem;
     box-sizing: border-box;
   }
   .listHeight {
-    padding-bottom: 1.24rem;
+    height: calc(~"100vh - 1.86rem - 4.36rem - .68rem - 1.1rem");
   }
   .my-rank {
-    position: fixed;
-    left: 0;
-    bottom: .8rem;
+    // position: fixed;
+    // left: 0;
+    // bottom: -.5rem;
     width: 100vw;
     height: 1.24rem;
     background-color: #f6f6f6;

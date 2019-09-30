@@ -12,7 +12,9 @@
     </ul>
     <!-- 前三甲 -->
     <div class="top-three">
-      
+      <div class="top-item">1</div>
+      <div class="top-item">2</div>
+      <div class="top-item">3</div>
     </div>
   </div>
 </template>
@@ -91,6 +93,32 @@ export default {
         border-radius: .3rem;
       }
       // background-color: #2F54ED;
+    }
+  }
+  .top-three {
+    padding: 0 .3rem;
+    display: flex;
+    justify-content: space-around;
+    padding-top: .3rem;
+    .top-item {
+      width: 2.1rem;
+      height: 3rem;
+      box-shadow:0px 4px 50px 0px rgba(0,0,0,0.06);
+      margin-top: .5rem;
+      border-radius: .2rem;
+      position: relative;
+      &:after {
+        content: '';
+        position: absolute;
+        height: .3rem;
+        width: 100%;
+        background-color: #000;
+        z-index: -1;
+      }
+      &:nth-of-type(2) {
+        margin-top: 0;
+        height: 3.5rem;
+      }
     }
   }
 }

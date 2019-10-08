@@ -26,7 +26,7 @@
 
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll'
-import { debug } from 'util';
+  import { debug } from 'util';
   export default {
     props: {
       probeType: {
@@ -86,11 +86,13 @@ import { debug } from 'util';
         noMore: false
       }
     },
-
-    updated(){
-    },
     methods: {
       _initScroll() {
+        // 数据不够一页
+        if (this.data.length < 7) {
+          // this.noMore = true
+          this.isLoading = false
+        }
         if (!this.$refs.wrapper) {
           return
         }
@@ -124,10 +126,12 @@ import { debug } from 'util';
                 this.isDone = false;
               });
               this.isload++
+              if (this.data.length < 7) {
+                return
+              }
               if (!this.noMore) {
                 this.isLoading = true
                 this.$emit('scrollToEnd')
-                
               }
             }
           })
@@ -181,7 +185,6 @@ import { debug } from 'util';
         this.isLoading = false
         setTimeout(() => {
           this.refresh()
-          
         }, this.refreshDelay)
       },
       noMore (val) {

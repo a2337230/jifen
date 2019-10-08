@@ -90,7 +90,6 @@ export default {
           this.checkItem.length = index + 2
           this.dataChild.splice(index + 1, 1, data).slice(0, index + 2)
         }
-        console.log(this.checkItem, this.dataChild)
         if (this.checkItem.length >=3) {
           if (val.Nodes.length ===0) {
             if (this.checkItem.length > 3) {
@@ -101,7 +100,6 @@ export default {
           }
           left = (this.checkItem.length + 1) * 33.3 - 100
           box.style.transform = `translateX(-${left}vw)`
-          console.log((this.checkItem.length + 1) * 33.3 - 100)
         } else {
           box.style.transform = `translateX(0vw)`
         }
@@ -120,6 +118,11 @@ export default {
     reset () {
       this.dataChild = []
       this.checkItem = [] 
+      let data = {
+        Nodes: this.depData[0].Nodes
+      }
+      this.dataChild.push(data)
+      this.checkItem.push(this.depData[0].CommonTypeID)
       let box = document.querySelector('.select')
       box.style.transform = `translateX(0vw)`
     },

@@ -2,7 +2,7 @@
   <div class="integral">
     <!-- 头部 -->
     <header class="header">
-      <span></span>
+      <span class="iconfont icon-fanhui1" @click="goPage"></span>
       积分排行榜
     </header>
     <!-- 选项卡 -->
@@ -13,7 +13,7 @@
     <!-- 前三甲 -->
     <v-touch class="list-box" :class="{listRight: tabValue === 1}" @swipeleft="swiperleft" @swiperight="swiperight">
       <int-view :listOther="listOther" :listTop="listTop" :Count="count" @getData="getData" :myAink="myAink"></int-view>
-      <int-view :listOther="listOther2" :listTop="listTop2" :Count="count2" @getData="getData"></int-view>
+      <int-view :listOther="listOther2" :listTop="listTop2" :Count="count2" @getData="getData" :selectKey="selectKey"></int-view>
     </v-touch>
     <!-- <div class="list-box" :class="{listRight: tabValue === 1}" @swipeleft="swiperleft" @swiperight="swiperight">
       <int-view :listOther="listOther" :listTop="listTop" :Count="count" @getData="getData" :myAink="myAink"></int-view>
@@ -22,7 +22,6 @@
     <div class="select-container-box">
       <select-box :depData="options" v-if="isDep" @getInt="getInt"></select-box>
     </div>
-     
   </div>
 </template>
 
@@ -70,7 +69,8 @@ export default {
       // 上啦加载状态
       tab1: false,
       tab2: false,
-      myAink: {}
+      myAink: {},
+      selectKey: String(new Date())
     }
   },
   mounted () {
@@ -88,7 +88,7 @@ export default {
       }
     },
     goPage (e) {
-      console.log(e)
+      window.location.href = 'https://m2.xlxt.net/Exchange/accountcenter.html'
     },
     tabClick (index) {
       this.tabValue = index
@@ -116,7 +116,6 @@ export default {
         this.isDep = false
         this.oneClick = true
       }
-      
     },
     // 排行列表
     async _GetCoinGiftRanking () {
@@ -134,13 +133,11 @@ export default {
         this.listTop2 = data.splice(0,3)
         this.listOther2 = data
         this.count2 = result.Count
-        console.log(this.listOther2)
       } else {
         this.listTop = data.splice(0,3)
         this.listOther = data
         this.count = result.Count
         this.myAink = result.Data.CurrentRanking
-        console.log(result)
       }
       if (this.departmentID) {
         this.twoClick = true
@@ -156,7 +153,6 @@ export default {
     // 部门列表
     async _GetAllDepartmentType () {
       let result = await GetAllDepartmentType ()
-      console.log(result)
       this.options = result.Data
       setTimeout(() => {
         this.isDep = true
@@ -166,11 +162,12 @@ export default {
     getInt (val) {
       this.pagesize = 10
       this.tabs2 = false
-      this.twoClick = !this.twoClick
       this.defaultID = val
       this.departmentID = val
       this._GetCoinGiftRanking()
       this.isDep = false
+      this.selectKey = String(new Date())
+      this.oneClick = false
     },
     // 上啦加载
     async getData () {
@@ -193,13 +190,10 @@ export default {
         pagesize: this.pagesize
       })
       let data = result.Data.CoinGiftRankingList.splice(3)
-      
       if (this.departmentID) {
         this.listOther2 = data
-        console.log(data)
       } else {
         this.listOther = data
-        console.log(result.Count, data.length)
       }
       if (result.Count <= 10) {
         if (this.tabValue) {
@@ -211,7 +205,6 @@ export default {
       if (data.length + 3 === result.Count) {
         this.tabValue ? this.tab2 = true : this.tab1 = true
       }
-      console.log(this.tab2)
     }
   },
   components: {
@@ -236,6 +229,13 @@ export default {
     color: #fff;
     text-align: center;
     position: relative;
+    .iconfont {
+      position: absolute;
+      width: .88rem;
+      height: .88rem;
+      left: 0;
+      font-size: .5rem;
+    }
   }
   .integ-tabs {
     display: flex;

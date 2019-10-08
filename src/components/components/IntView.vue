@@ -12,12 +12,12 @@
             </div>
             <p class="int-name">{{ listTop[1].Name }}</p>
             <div class="integral">
-              <span>{{ listTop[1].CoinCount }}</span>
+              <span>{{ listTop[1].CoinCount | coinFormat }}</span>
               <p><img src="./../../common/images/jifen.png" alt="">积分</p>
             </div>
           </div>
         </li>
-        <li>
+        <li :class="{isOne: listTop.length === 1}">
           <!-- 图标 -->
           <img src="./../../common/images/one.png" alt="2" class="icon">
           <div class="top-item-container">
@@ -26,7 +26,7 @@
             </div>
             <p class="int-name">{{ listTop[0].Name }}</p>
             <div class="integral">
-              <span>{{ listTop[0].CoinCount }}</span>
+              <span>{{ listTop[0].CoinCount | coinFormat }}</span>
               <p><img src="./../../common/images/jifen.png" alt="">积分</p>
             </div>
           </div>
@@ -40,14 +40,14 @@
             </div>
             <p class="int-name">{{ listTop[2].Name }}</p>
             <div class="integral">
-              <span>{{ listTop[2].CoinCount }}</span>
+              <span>{{ listTop[2].CoinCount | coinFormat }}</span>
               <p><img src="./../../common/images/jifen.png" alt="">积分</p>
             </div>
           </div>
         </li>
       </ul>
       <!-- 其余排名 -->
-      <scroll :Count="Count" :class="{listHeight: myAink.appUser}" v-if="listOther.length" class="list-content" @scrollToEnd="getData" :data="listOther">
+      <scroll :Count="Count" :class="{listHeight: myAink.appUser}" v-if="listOther.length" class="list-content" @scrollToEnd="getData" :data="listOther" :key="selectKey">
         <ul class="int-list">
           <li v-for="(item, index) in listOther" :key="item.AppUserID">
             <span class="int-count">{{index + 4}}</span>
@@ -55,7 +55,7 @@
               <img :src="'https://img.xlxt.net/' + item.HeadImg" alt="">
             </div>
             <p class="int-name">{{item.Name}}</p>
-            <span class="int-num">{{item.CoinCount}}积分</span>
+            <span class="int-num">{{item.CoinCount}} 积分</span>
           </li>
         </ul>
       </scroll>
@@ -71,7 +71,7 @@
             <img :src="'https://img.xlxt.net/' + myAink.appUser.HeadImg" alt="">
           </div>
           <p class="int-name">{{myAink.appUser.Name}}</p>
-          <span class="int-num">{{myAink.appUser.CoinCount}}积分</span>
+          <span class="int-num">{{myAink.appUser.CoinCount}} 积分</span>
         </li>
      </ul>
   </div>
@@ -97,6 +97,10 @@ export default {
     myAink: {
       type: Object,
       default: () => { return {} }
+    },
+    selectKey: {
+      type: String,
+      default: ''
     }
   },
   methods: {
@@ -104,11 +108,18 @@ export default {
       this.$emit('getData')
     }
   },
+  filters: {
+    coinFormat (val) {
+      if (val > 1000000) {
+        return parseInt(val/10000) + '万+'
+      }
+      return val
+    }
+  },
   components: {
     countTo,
     Scroll
   }
-
 }
 </script>
 <style lang="less" scoped>
@@ -153,7 +164,7 @@ export default {
           height: 3.5rem;
         }
       }
-      &:nth-of-type(2) {
+      &:nth-of-type(2){
         margin-top: 0;
         height: 3.5rem;
         background-color:#D5A963;
@@ -213,9 +224,11 @@ export default {
         }
         .int-name {
           text-align: center;
-          margin: .1rem 0;
+          margin: .1rem 0.3rem;
           font-size: .3rem;
           color: #333;
+          white-space: nowrap;
+          overflow-x: scroll;
         }
         .integral {
           text-align: center;
@@ -235,12 +248,21 @@ export default {
               margin-right: .1rem;
               vertical-align: middle;
               position: relative;
-              top: -0.01rem;
+              top: -0.04rem;
             }
           }
         }
       }
       
+    }
+    .isOne {
+      margin-top: 0;
+      height: 3.5rem;
+      background-color:#D5A963;
+      left: 2.7rem;
+      &:active {
+        animation: intClick2 .2s;
+      }
     }
   }
   .int-list, .my-rank {
@@ -271,9 +293,11 @@ export default {
         }
       }
       .int-name {
-        width: 3rem;
+        width: 2.1rem;
         font-size: .3rem;
         color: #333;
+        white-space: nowrap;
+        overflow-x: scroll;
       }
       .int-num {
         position: absolute;

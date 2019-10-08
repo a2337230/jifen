@@ -11,8 +11,9 @@ export default function ajax(url = '', params = {}, type = 'GET') {
 		var headers = {
 			'k': '7f37464a9972f57ee772f80bc32bc07c',
 			'u': 'd4fd0616fab084ffec432fdd91c11629',
-			// 'u': util.getCookie('u'),
-			// 'k': util.getCookie('k'),
+			// 'u':util.getCookie('UserID') ? util.getCookie('UserID'): util.getCookie('u'),
+			// 'k':util.getCookie('token') ? util.getCookie('token'): util.getCookie('k'), 
+			// 'Content-Type': 'application/json'
 		}
 		if (type === 'GET') {
 			let paramsStr = ''

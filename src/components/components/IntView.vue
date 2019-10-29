@@ -1,5 +1,6 @@
 <template>
   <div class="int-view">
+    11111111
     <!-- 前三甲 -->
     <div class="int-container" v-if="Count">
       <ul class="top-three" v-if="listTop.length">

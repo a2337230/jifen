@@ -15,10 +15,6 @@
       <int-view :listOther="listOther" :listTop="listTop" :Count="count" @getData="getData" :myAink="myAink"></int-view>
       <int-view :listOther="listOther2" :listTop="listTop2" :Count="count2" @getData="getData" :selectKey="selectKey"></int-view>
     </v-touch>
-    <!-- <div class="list-box" :class="{listRight: tabValue === 1}" @swipeleft="swiperleft" @swiperight="swiperight">
-      <int-view :listOther="listOther" :listTop="listTop" :Count="count" @getData="getData" :myAink="myAink"></int-view>
-      <int-view :listOther="listOther2" :listTop="listTop2" :Count="count2" @getData="getData"></int-view>
-    </div> -->
     <div class="select-container-box">
       <select-box :depData="options" v-if="isDep" @getInt="getInt"></select-box>
     </div>

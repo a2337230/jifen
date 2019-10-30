@@ -4,4 +4,5 @@ const BASE_URL = ''
 // ------------------------------------------------------------------------
 export const GetCoinGiftRanking = (params) => ajax(BASE_URL + '/CoinGiftView/GetCoinGiftRanking', params)
 export const GetAllDepartmentType = (params) => ajax(BASE_URL + '/Department/GetAllDepartmentType', params)
+export const GetXLCoinRanking = (params) => ajax(BASE_URL + '/CoinGiftView/GetXLCoinRanking', params)
 

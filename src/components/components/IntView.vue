@@ -1,6 +1,5 @@
 <template>
   <div class="int-view">
-    11111111
     <!-- 前三甲 -->
     <div class="int-container" v-if="Count">
       <ul class="top-three" v-if="listTop.length">
@@ -13,8 +12,8 @@
             </div>
             <p class="int-name">{{ listTop[1].Name }}</p>
             <div class="integral">
-              <span>{{ listTop[1].CoinCount | coinFormat }}</span>
-              <p><img src="./../../common/images/jifen.png" alt="">积分</p>
+              <span>{{ listTop[1].XLCoin | coinFormat }}</span>
+              <!-- <p><img src="./../../common/images/jifen.png" alt="">积分</p> -->
             </div>
           </div>
         </li>
@@ -27,8 +26,8 @@
             </div>
             <p class="int-name">{{ listTop[0].Name }}</p>
             <div class="integral">
-              <span>{{ listTop[0].CoinCount | coinFormat }}</span>
-              <p><img src="./../../common/images/jifen.png" alt="">积分</p>
+              <span>{{ listTop[0].XLCoin | coinFormat }}</span>
+              <!-- <p><img src="./../../common/images/jifen.png" alt="">积分</p> -->
             </div>
           </div>
         </li>
@@ -41,8 +40,8 @@
             </div>
             <p class="int-name">{{ listTop[2].Name }}</p>
             <div class="integral">
-              <span>{{ listTop[2].CoinCount | coinFormat }}</span>
-              <p><img src="./../../common/images/jifen.png" alt="">积分</p>
+              <span>{{ listTop[2].XLCoin | coinFormat }}</span>
+              <!-- <p><img src="./../../common/images/jifen.png" alt="">积分</p> -->
             </div>
           </div>
         </li>
@@ -56,7 +55,7 @@
               <img :src="'https://img.xlxt.net/' + item.HeadImg" alt="">
             </div>
             <p class="int-name">{{item.Name}}</p>
-            <span class="int-num">{{item.CoinCount}} 积分</span>
+            <span class="int-num">{{item.XLCoin}}</span>
           </li>
         </ul>
       </scroll>
@@ -72,7 +71,7 @@
             <img :src="'https://img.xlxt.net/' + myAink.appUser.HeadImg" alt="">
           </div>
           <p class="int-name">{{myAink.appUser.Name}}</p>
-          <span class="int-num">{{myAink.appUser.CoinCount}} 积分</span>
+          <span class="int-num">{{myAink.appUser.XLCoin}}</span>
         </li>
      </ul>
   </div>
@@ -136,7 +135,7 @@ export default {
     margin-bottom: .65rem;
     li {
       width: 2.1rem;
-      height: 3rem;
+      height: 2.7rem;
       padding-top: .05rem;
       box-shadow:0px 4px 50px 0px rgba(0,0,0,0.06);
       border-radius: .2rem;
@@ -167,7 +166,7 @@ export default {
       }
       &:nth-of-type(2){
         margin-top: 0;
-        height: 3.5rem;
+        height: 3.2rem;
         background-color:#D5A963;
         left: 2.7rem;
         &:active {
@@ -236,8 +235,8 @@ export default {
           display: flex;
           flex-direction: column;
           span {
-            font-size: .4rem;
-            font-family: '楷体';
+            font-size: .34rem;
+            // font-family: '楷体';
             margin-bottom: .1rem;
           }
           p {

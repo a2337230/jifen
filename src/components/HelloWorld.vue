@@ -4,7 +4,7 @@
     <header class="header">
       <span class="iconfont icon-fanhui1" @click="goPage"></span>
       杏林币排行榜
-    </header>
+    </header> 
     <!-- 选项卡 -->
     <ul class="integ-tabs">
       <li :class="{current : tabValue === index}" v-for="(item, index) in tabData" :key="item.title" @click="tabClick(index)">{{item.title}}</li>

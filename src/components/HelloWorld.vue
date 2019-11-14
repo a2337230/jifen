@@ -12,13 +12,14 @@
     </ul>
     <!-- 前三甲 -->
     <v-touch class="list-box" :class="{listRight: tabValue === 1}" @swipeleft="swiperleft" @swiperight="swiperight">
-      <int-view :listOther="listOther2" :listTop="listTop2" :Count="count2" @getData="getData" :myAink="myAink"></int-view>
-      <int-view :listOther="listOther2" :listTop="listTop2" :Count="count2" @getData="getData" :myAink="myAink" :selectKey="selectKey"></int-view>
+      <int-view :listOther="listOther" :listTop="listTop" :Count="count1" @getData="getData" :myAink="myAink1" :noList="noList1"></int-view>
+      <int-view :listOther="listOther2" :listTop="listTop2" :Count="count" @getData="getData" :myAink="myAink" :noList="noList2" :noTitle="'部门'"></int-view>
     </v-touch>
   </div>
 </template>
 
 <script>
+import IntView from './components/IntView'
 import { GetCoinGiftRanking, GetAllDepartmentType, GetXLCoinRanking } from '@/api/index'
 export default {
   name: 'integral',
@@ -27,11 +28,11 @@ export default {
       // 选项卡列表
       tabData: [
         {
-          title: '公司排行',
+          title: '公司排名',
           index: 0
         },
         {
-          title: '部门排行',
+          title: '部门排名',
           index: 1
         }
       ],
@@ -41,11 +42,13 @@ export default {
       departmentID: 0,
       // 显示条数
       pageindex: 1,
+      pageindex1: 1,
       pagesize: 10,
+      pagesize1: 10,
       isEnterprise: true,
       // 总条数
       count: 0,
-      count2: 1,
+      count1: 0,
       // 前三名
       listTop: [],
       listOther: [],
@@ -64,20 +67,45 @@ export default {
       tab1: false,
       tab2: false,
       myAink: {},
+      myAink1: {},
+      tab: 0,
       selectKey: String(new Date())
     }
   },
   mounted () {
-    this._GetXLCoinRanking()
+    let integral = document.documentElement.clientHeight
+    // 头部可视高度
+    let header = document.querySelector('.header').clientHeight
+    // 选项卡可视高度
+    let tab = document.querySelector('.integ-tabs').clientHeight
+    let h = integral - header - tab
+    let list = document.querySelector('.list-box')
+    console.log(integral, header, tab)
+    list.style.height = h + 'px'
+    // let view = document.querySelectorAll('.int-view')
+    // let content = document.querySelectorAll('.list-content')
+    // let myRank = document.querySelector('.my-rank').clientHeight
+    // view.forEach(item => {
+    //   item.style.height = h + 'px'
+    // })
+    // content.forEach(item => {
+    //   item.style.height = h - myRank + 'px'
+    // })
+    // this.isShow = String(new Date())
+    // alert(h)
+    this._GetXLCoinRanking1()
+    // this._GetXLCoinRanking()
   },
   methods: {
     swiperleft () {
       if (!this.tabValue) {
+        console.log(this.tabValue)
         this.tabClick(1)
       }
     },
     swiperight () {
       if (this.tabValue) {
+        console.log(this.tabValue)
         this.tabClick(0)
       }
     },
@@ -85,15 +113,27 @@ export default {
       window.location.href = 'https://m2.xlxt.net/Exchange/accountcenter.html'
     },
     tabClick (index) {
+      this.tab = index
       index === 0 ? this.isEnterprise = true : this.isEnterprise = false
-      this.listTop2 = []
-      this.listOther2 = []
+      // this.listTop2 = []
+      // this.listOther2 = []
       this.pagesize = 10
-      console.log(this.isEnterprise)
       this.tabValue = index
       let tabItem = document.querySelector('.tab-bar')
       tabItem.style.left = 50 * index + 'vw'
-      this._GetXLCoinRanking()
+      if (!index) {
+        if (this.listTop.length) {
+          return
+        }
+        this._GetXLCoinRanking1()
+      } else {
+        // console.log(this.listTop2)
+        if (this.listTop2.length) {
+          return
+        }
+        this._GetXLCoinRanking()
+      }
+      
     },
     // 排行列表
     async _GetCoinGiftRanking () {
@@ -135,31 +175,71 @@ export default {
         isAll: 0,
         pagesize: this.pagesize,
         pageindex: this.pageindex,
-        isEnterprise: this.isEnterprise
+        isEnterprise: false
       })
-      let data = result.Data.XLCoinRankingList
-      this.listTop2 = data.splice(0,3)
-      this.listOther2 = data
-      this.count2 = result.Count
-      this.myAink = result.Data.CurrentRanking
+      if (result.Data) {
+        let data = result.Data.XLCoinRankingList
+        this.listTop2 = data.splice(0,3)
+        this.listOther2 = data
+        this.count = result.Count
+        if (!this.count) {
+          this.noList2 = true
+        }
+        this.myAink = result.Data.CurrentRanking
+      }
     },
-    // 上啦加载
-    async getData () {
-      this.pagesize+=100
+    async _GetXLCoinRanking1 () {
       let result = await GetXLCoinRanking ({
         departmentID: 0,
         isAll: 0,
-        pagesize: this.pagesize,
-        pageindex: this.pageindex,
+        pagesize: this.pagesize1,
+        pageindex: this.pageindex1,
         isEnterprise: this.isEnterprise
       })
-      let data = result.Data.XLCoinRankingList.splice(3)
-      this.listOther2 = data
-      this.count2 = result.Count
+      if (result.Data) {
+        let data = result.Data.XLCoinRankingList
+        this.listTop = data.splice(0,3)
+        this.listOther = data
+        this.count1 = result.Count
+        if (!this.count1) {
+          this.noList1 = true
+        }
+        this.myAink1 = result.Data.CurrentRanking
+      }
+    },
+    // 上啦加载
+    async getData () {
+      let result = ''
+      if (this.tab) {
+        this.pagesize+=20
+        result = await GetXLCoinRanking ({
+          departmentID: 0,
+          isAll: 0,
+          pagesize: this.pagesize,
+          pageindex: this.pageindex,
+          isEnterprise: this.isEnterprise
+        })
+        let data = result.Data.XLCoinRankingList.splice(3)
+        this.listOther2 = data
+        this.count = result.Count
+      } else {
+        this.pagesize1+=20
+        result = await GetXLCoinRanking ({
+          departmentID: 0,
+          isAll: 0,
+          pagesize: this.pagesize1,
+          pageindex: this.pageindex1,
+          isEnterprise: this.isEnterprise
+        })
+        let data = result.Data.XLCoinRankingList.splice(3)
+        this.listOther = data
+        this.count1 = result.Count
+      }
+      
     }
   },
   components: {
-    IntView: () => import('./components/IntView')
+    IntView
   }
 }
 </script>
@@ -179,6 +259,7 @@ export default {
     color: #fff;
     text-align: center;
     position: relative;
+    // height: 100vh;
     .iconfont {
       position: absolute;
       width: .88rem;

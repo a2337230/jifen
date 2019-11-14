@@ -18,7 +18,7 @@
         正在加载...
       </div>
       <p class="no-more" v-if="noMore">
-        <span>我也是有底线的</span>
+        <span>我是有底线的</span>
       </p>
     </div>
   </div>
@@ -202,7 +202,7 @@
 
 <style scoped lang="less">
 .scroll-wrap {
-  padding-bottom: .5rem;
+  // padding-bottom: .5rem;
   box-sizing: border-box;
   position: relative;
 }

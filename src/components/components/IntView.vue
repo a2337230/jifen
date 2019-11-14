@@ -1,68 +1,73 @@
 <template>
   <div class="int-view">
     <!-- 前三甲 -->
-    <div class="int-container" v-if="Count">
-      <ul class="top-three" v-if="listTop.length">
-        <li v-if="listTop.length >= 2">
-          <!-- 图标 -->
-          <img src="./../../common/images/two.png" alt="2" class="icon">
-          <div class="top-item-container">
-            <div class="avatar">
-              <img :src="'https://img.xlxt.net/' + listTop[1].HeadImg" alt="">
+    <scroll :Count="Count" :class="{listHeight: myAink.appUser}" v-if="Count" class="list-content" @scrollToEnd="getData" :data="listOther" :key="isShow">
+      <div class="int-container">
+        <ul class="top-three" v-if="listTop.length">
+          <li v-if="listTop.length >= 2">
+            <!-- 图标 -->
+            <img src="./../../common/images/two.png" alt="2" class="icon">
+            <div class="top-item-container">
+              <div class="avatar">
+                <img :src="'https://img.xlxt.net/' + listTop[1].HeadImg" alt="">
+              </div>
+              <p class="int-name">{{ listTop[1].Name }}</p>
+              <div class="integral">
+                <span>{{ listTop[1].XLCoin.toFixed(2) | coinFormat }}</span>
+                <!-- <p><img src="./../../common/images/jifen.png" alt="">积分</p> -->
+              </div>
             </div>
-            <p class="int-name">{{ listTop[1].Name }}</p>
-            <div class="integral">
-              <span>{{ listTop[1].XLCoin | coinFormat }}</span>
-              <!-- <p><img src="./../../common/images/jifen.png" alt="">积分</p> -->
+          </li>
+          <li :class="{isOne: listTop.length === 1}">
+            <!-- 图标 -->
+            <img src="./../../common/images/one.png" alt="2" class="icon">
+            <div class="top-item-container">
+              <div class="avatar">
+                <img :src="'https://img.xlxt.net/' + listTop[0].HeadImg" alt="">
+              </div>
+              <p class="int-name">{{ listTop[0].Name }}</p>
+              <div class="integral">
+                <span>{{ listTop[0].XLCoin.toFixed(2)| coinFormat }}</span>
+                <!-- <p><img src="./../../common/images/jifen.png" alt="">积分</p> -->
+              </div>
             </div>
-          </div>
-        </li>
-        <li :class="{isOne: listTop.length === 1}">
-          <!-- 图标 -->
-          <img src="./../../common/images/one.png" alt="2" class="icon">
-          <div class="top-item-container">
-            <div class="avatar">
-              <img :src="'https://img.xlxt.net/' + listTop[0].HeadImg" alt="">
+          </li>
+          <li v-if="listTop.length === 3">
+            <!-- 图标 -->
+            <img src="./../../common/images/three.png" alt="2" class="icon">
+            <div class="top-item-container">
+              <div class="avatar">
+                <img :src="'https://img.xlxt.net/' + listTop[2].HeadImg" alt="">
+              </div>
+              <p class="int-name">{{ listTop[2].Name }}</p>
+              <div class="integral">
+                <span>{{ listTop[2].XLCoin.toFixed(2) | coinFormat }}</span>
+                <!-- <p><img src="./../../common/images/jifen.png" alt="">积分</p> -->
+              </div>
             </div>
-            <p class="int-name">{{ listTop[0].Name }}</p>
-            <div class="integral">
-              <span>{{ listTop[0].XLCoin | coinFormat }}</span>
-              <!-- <p><img src="./../../common/images/jifen.png" alt="">积分</p> -->
-            </div>
-          </div>
-        </li>
-        <li v-if="listTop.length === 3">
-          <!-- 图标 -->
-          <img src="./../../common/images/three.png" alt="2" class="icon">
-          <div class="top-item-container">
-            <div class="avatar">
-              <img :src="'https://img.xlxt.net/' + listTop[2].HeadImg" alt="">
-            </div>
-            <p class="int-name">{{ listTop[2].Name }}</p>
-            <div class="integral">
-              <span>{{ listTop[2].XLCoin | coinFormat }}</span>
-              <!-- <p><img src="./../../common/images/jifen.png" alt="">积分</p> -->
-            </div>
-          </div>
-        </li>
-      </ul>
-      <!-- 其余排名 -->
-      <scroll :Count="Count" :class="{listHeight: myAink.appUser}" v-if="listOther.length" class="list-content" @scrollToEnd="getData" :data="listOther" :key="selectKey">
-        <ul class="int-list">
-          <li v-for="(item, index) in listOther" :key="item.AppUserID">
-            <span class="int-count">{{index + 4}}</span>
-            <div class="avatar">
-              <img :src="'https://img.xlxt.net/' + item.HeadImg" alt="">
-            </div>
-            <p class="int-name">{{item.Name}}</p>
-            <span class="int-num">{{item.XLCoin}}</span>
           </li>
         </ul>
-      </scroll>
-    </div>
+        <!-- 其余排名 -->
+          <ul class="int-list">
+            <li v-for="(item, index) in listOther" :key="item.AppUserID">
+              <span class="int-count">{{index + 4}}</span>
+              <div class="avatar">
+                <img :src="'https://img.xlxt.net/' + item.HeadImg" alt="">
+              </div>
+              <p class="int-name">{{item.Name}}</p>
+              <span class="int-num">{{item.XLCoin.toFixed(2)}}</span>
+            </li>
+          </ul>
+      </div>
+    </scroll>
     
     <!-- 暂无数据 -->
-    <p class="no-data" v-if="!Count">暂无数据</p>
+    <div class="no-data" v-if="noList">
+      <img src="./../../common/images/54b49010050ae46c0cbc7c24411b849d.png" alt="">
+      <p>您暂时还没有加入{{noTitle}}</p>
+      <p>赶快加入{{noTitle}}与大家一决高下吧</p>
+    </div>
+    <!-- <p class="no-data" v-if="!Count">暂无数据</p> -->
      <!-- 个人排行 -->
      <ul class="my-rank" v-if="myAink.appUser">
        <li>
@@ -71,7 +76,7 @@
             <img :src="'https://img.xlxt.net/' + myAink.appUser.HeadImg" alt="">
           </div>
           <p class="int-name">{{myAink.appUser.Name}}</p>
-          <span class="int-num">{{myAink.appUser.XLCoin}}</span>
+          <span class="int-num">{{myAink.appUser.XLCoin.toFixed(2)}}</span>
         </li>
      </ul>
   </div>
@@ -101,6 +106,19 @@ export default {
     selectKey: {
       type: String,
       default: ''
+    },
+    noTitle: {
+      type: String,
+      default: '公司'
+    },
+    noList: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data () {
+    return {
+      isShow: String(new Date())
     }
   },
   methods: {
@@ -116,6 +134,14 @@ export default {
       return val
     }
   },
+  watch: {
+    listTop (val) {
+      console.log(val)
+    },
+    Count (val) {
+      console.log(val)
+    }
+  },
   components: {
     countTo,
     Scroll
@@ -125,11 +151,12 @@ export default {
 <style lang="less" scoped>
 .int-view {
   width: 100vw;
+  // height: calc(~"100vh - 1.76rem");
+  height: 100%;
   min-width: 100vw;
-  padding-top: .2rem;
   position: relative;
   .top-three {
-    padding: .65rem .3rem 0;
+    padding: .3rem .3rem 0;
     position: relative;
     height: 3.5rem;
     margin-bottom: .65rem;
@@ -227,8 +254,11 @@ export default {
           margin: .1rem 0.3rem;
           font-size: .3rem;
           color: #333;
-          white-space: nowrap;
-          overflow-x: scroll;
+          height: .42rem;
+          overflow: hidden;
+          // overflow: hidden;
+          // text-overflow: clip;
+          // white-space: nowrap;
         }
         .integral {
           text-align: center;
@@ -241,7 +271,7 @@ export default {
           }
           p {
             font-size: .2rem;
-            color: #848484;
+            color: red;
             img {
               width: .2rem;
               height: .22rem;
@@ -266,8 +296,11 @@ export default {
     }
   }
   .int-list, .my-rank {
+    // position: fixed;
     padding: 0 .3rem .5rem;
     // margin-top: .68rem;
+    // position: fixed;
+    // bottom: 0;
     li {
       // background-color: #000;
       height: .8rem;
@@ -293,11 +326,14 @@ export default {
         }
       }
       .int-name {
-        width: 2.1rem;
+        width: 3.5rem;
+        // width: calc(~"100vw - .56rem");
         font-size: .3rem;
+        height: .4rem;
         color: #333;
-        white-space: nowrap;
-        overflow-x: scroll;
+        overflow: hidden;
+        text-overflow: clip;
+        // white-space: nowrap;
       }
       .int-num {
         position: absolute;
@@ -308,23 +344,47 @@ export default {
       }
     }
   }
+  .my-rank {
+    position: fixed;
+    bottom: 0;
+  }
+  // .no-data {
+  //   position: absolute;
+  //   left: 0;
+  //   top: 2rem;
+  //   width: 100vw;
+  //   text-align: center;
+  //   color: #999;
+  // }
   .no-data {
     position: absolute;
-    left: 0;
     top: 2rem;
     width: 100vw;
-    text-align: center;
-    color: #999;
+    // height: 3rem;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    img {
+      width: 4rem;
+      height: 4rem;
+    }
+    p {
+      color: #999;
+      font-size: .3rem;
+      line-height: .6rem;
+    }
   }
   .list-content {
-    height: calc(~"100vh - 1.86rem - 4.36rem - .68rem");
+    height: calc(~"100% - 1.24rem");
     overflow: hidden;
     // margin-bottom: .2rem;
     box-sizing: border-box;
+    // overflow-y: scroll;
   }
-  .listHeight {
-    height: calc(~"100vh - 1.86rem - 4.36rem - .68rem - 1.1rem");
-  }
+  // .listHeight {
+  //   height: calc(~"100vh - 1.86rem - 4.36rem - .68rem - 1.1rem");
+  // }
   .my-rank {
     // position: fixed;
     // left: 0;

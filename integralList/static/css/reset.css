@@ -1,6 +1,9 @@
 body, h1, h2, h3, p{
   margin: 0;
 }
+body {
+  height: 100vh;
+}
 ul {
   margin: 0;
   padding: 0;

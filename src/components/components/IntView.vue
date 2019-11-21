@@ -63,7 +63,7 @@
     
     <!-- 暂无数据 -->
     <div class="no-data" v-if="noList">
-      <img src="./../../common/images/54b49010050ae46c0cbc7c24411b849d.png" alt="">
+      <img src="./../../common/images/nomore.png" alt="">
       <p>您暂时还没有加入{{noTitle}}</p>
       <p>赶快加入{{noTitle}}与大家一决高下吧</p>
     </div>

@@ -12,17 +12,17 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/CoinGiftView/*': {
-				target: 'https://www2.xlxt.net',
+				target: 'https://www.xlxt.net',
 				secure: false,
 				changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
       },
       '/Department/*': {
-				target: 'https://www2.xlxt.net',
+				target: 'https://www.xlxt.net',
 				secure: false,
 				changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
       },
       '/CoinGift/*': {
-				target: 'https://www2.xlxt.net',
+				target: 'https://www.xlxt.net',
 				secure: false,
 				changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
 			}

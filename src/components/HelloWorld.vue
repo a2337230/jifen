@@ -69,7 +69,9 @@ export default {
       myAink: {},
       myAink1: {},
       tab: 0,
-      selectKey: String(new Date())
+      selectKey: String(new Date()),
+      noList1: false,
+      noList2: false
     }
   },
   mounted () {
@@ -110,7 +112,7 @@ export default {
       }
     },
     goPage (e) {
-      window.location.href = 'https://m2.xlxt.net/Exchange/accountcenter.html'
+      window.location.href = 'https://m.xlxt.net/Exchange/accountcenter.html'
     },
     tabClick (index) {
       this.tab = index
@@ -143,28 +145,30 @@ export default {
         pageindex: this.pageindex,
         pagesize: this.pagesize
       })
-      if (result.Code === 401) {
+      if (result.Code === 403) {
         return
       }
-      let data = result.Data.CoinGiftRankingList
-      if (this.departmentID) {
-        this.listTop2 = data.splice(0,3)
-        this.listOther2 = data
-        this.count2 = result.Count
-      } else {
-        this.listTop = data.splice(0,3)
-        this.listOther = data
-        this.count = result.Count
-        this.myAink = result.Data.CurrentRanking
-      }
-      if (this.departmentID) {
-        this.twoClick = true
-      }
-      if (result.Count <= 10) {
-        if (this.tabValue) {
-          this.tab2 = true
+      if (result.Code === 200) {
+        let data = result.Data.CoinGiftRankingList
+        if (this.departmentID) {
+          this.listTop2 = data.splice(0,3)
+          this.listOther2 = data
+          this.count2 = result.Count
         } else {
-          this.tab = true
+          this.listTop = data.splice(0,3)
+          this.listOther = data
+          this.count = result.Count
+          this.myAink = result.Data.CurrentRanking
+        }
+        if (this.departmentID) {
+          this.twoClick = true
+        }
+        if (result.Count <= 10) {
+          if (this.tabValue) {
+            this.tab2 = true
+          } else {
+            this.tab = true
+          }
         }
       }
     },
@@ -177,6 +181,10 @@ export default {
         pageindex: this.pageindex,
         isEnterprise: false
       })
+      if (result.Code === 403) {
+        this.noList2 = true
+        return
+      }
       if (result.Data) {
         let data = result.Data.XLCoinRankingList
         this.listTop2 = data.splice(0,3)
@@ -185,6 +193,7 @@ export default {
         if (!this.count) {
           this.noList2 = true
         }
+        this.noList2 = false
         this.myAink = result.Data.CurrentRanking
       }
     },
@@ -196,6 +205,10 @@ export default {
         pageindex: this.pageindex1,
         isEnterprise: this.isEnterprise
       })
+      if (result.Code === 403) {
+        this.noList1 = true
+        return
+      }
       if (result.Data) {
         let data = result.Data.XLCoinRankingList
         this.listTop = data.splice(0,3)
@@ -204,6 +217,7 @@ export default {
         if (!this.count1) {
           this.noList1 = true
         }
+        this.noList1 = false
         this.myAink1 = result.Data.CurrentRanking
       }
     },
